@@ -11,9 +11,9 @@ import { BehaviorSubject, Observable, Observer, share, Subject, Subscription, ta
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { FlightStatusToggleComponent } from '../flight-status-toggle/flight-status-toggle.component';
 import { FlightValidationErrorsComponent } from '../flight-validation-errors/flight-validation-errors.component';
-import { CityValidatorDirective } from '../shared/validation/city-validator.directive';
 import { AsyncCityValidatorDirective } from '../shared/validation/async-city-validator.directive';
 import { RoundTripValidatorDirective } from '../shared/validation/round-trip-validator.directive';
+import { FlightEditComponent } from '../flight-edit/flight-edit.component';
 
 @Component({
   standalone: true,
@@ -24,9 +24,9 @@ import { RoundTripValidatorDirective } from '../shared/validation/round-trip-val
     FlightCardComponent,
     FlightStatusToggleComponent,
     FlightValidationErrorsComponent,
-    CityValidatorDirective,
     AsyncCityValidatorDirective,
     RoundTripValidatorDirective,
+    FlightEditComponent,
   ],
   selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
@@ -51,6 +51,7 @@ export class FlightSearchComponent implements OnDestroy {
   readonly terminator$ = this.onDestroySubject.asObservable();
 
   protected selectedFlight?: Flight;
+  protected flightToEdit?: Flight;
 
   protected message = '';
 
@@ -119,7 +120,7 @@ export class FlightSearchComponent implements OnDestroy {
     this.selectedFlight = selectedFlight;
   }
 
-  protected onSave(): void {
+  /*protected onSave(): void {
     if (this.selectedFlight) {
       this.flightService
         .save(this.selectedFlight)
@@ -136,5 +137,5 @@ export class FlightSearchComponent implements OnDestroy {
           },
         });
     }
-  }
+  }*/
 }
