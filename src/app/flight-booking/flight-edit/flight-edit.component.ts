@@ -1,10 +1,11 @@
 import { Component, DestroyRef, effect, inject, input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Flight } from '../../entities/flight';
 import { FlightService } from '../shared/services/flight.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FlightValidationErrorsComponent } from '../flight-validation-errors/flight-validation-errors.component';
 
 @Component({
@@ -46,9 +47,15 @@ export class FlightEditComponent {
 
   protected message = '';
 
-  private readonly valueChangesLogger = this.editForm.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
-    console.log(value);
-  });
+  private readonly valueChangesLogger = this.editForm.valueChanges
+    .pipe(
+      debounceTime(250),
+      distinctUntilChanged((a, b) => a.id === b.id && a.from === b.from && a.to === b.to && a.date === b.date),
+      takeUntilDestroyed(),
+    )
+    .subscribe((value) => {
+      console.log(value);
+    });
 
   private updated = effect(() => this.editForm.patchValue(this.flight()));
 
