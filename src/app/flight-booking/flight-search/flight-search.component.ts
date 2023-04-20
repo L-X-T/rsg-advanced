@@ -14,6 +14,7 @@ import { FlightValidationErrorsComponent } from '../flight-validation-errors/fli
 import { AsyncCityValidatorDirective } from '../shared/validation/async-city-validator.directive';
 import { RoundTripValidatorDirective } from '../shared/validation/round-trip-validator.directive';
 import { FlightEditComponent } from '../flight-edit/flight-edit.component';
+import { CITY_PATTERN } from '../../shared/global';
 
 @Component({
   standalone: true,
@@ -52,6 +53,7 @@ export class FlightSearchComponent implements OnDestroy {
 
   protected selectedFlight?: Flight;
   protected flightToEdit?: Flight;
+  readonly CITY_PATTERN = CITY_PATTERN;
 
   protected message = '';
 
