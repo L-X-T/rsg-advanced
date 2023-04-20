@@ -60,7 +60,11 @@
       }
 
       <div class="form-group">
-        <button (click)="onSearch()" class="btn btn-default">Search</button>
+        <button (click)="onSearch()" class="btn btn-default" style="margin-right: 10px">Search</button>
+
+        <button [disabled]="flights.length === 0" (click)="delayFirstFlight()" class="btn btn-default">
+          Delay first flight
+        </button>
       </div>
     </form>
   </div>
@@ -107,7 +111,7 @@
   <div class="row">
     @for (flight of flights; track flight.id) {
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @defer (on timer(4200); prefetch on idle) {
+        @defer (on viewport; prefetch on idle) {
           <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
           <app-flight-card [item]="flight" [selected]="basket[flight.id]">
             <button class="btn btn-default" style="margin-right: 10px" (click)="basket[flight.id] = !basket[flight.id]">
