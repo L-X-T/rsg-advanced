@@ -1,21 +1,20 @@
-import { Component, input, model, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { Flight } from '../../entities/flight';
-import { FlightStatusToggleComponent } from '../flight-status-toggle/flight-status-toggle.component';
 
 @Component({
   standalone: true,
-  imports: [DatePipe, FlightStatusToggleComponent],
+  imports: [DatePipe],
   selector: 'app-flight-card',
   templateUrl: './flight-card.component.html',
   styleUrls: ['./flight-card.component.css'],
 })
 export class FlightCardComponent implements OnInit, OnChanges, OnDestroy {
-  debug = true;
+  debug = false;
 
   item = input.required<Flight>();
-  selected = model(false);
+  selected = input(false);
 
   constructor() {
     this.debugInputs('constructor');
@@ -33,17 +32,9 @@ export class FlightCardComponent implements OnInit, OnChanges, OnDestroy {
     this.debugInputs('ngOnDestroy');
   }
 
-  onSelect(): void {
-    this.selected.set(true);
-  }
-
-  onDeselect(): void {
-    this.selected.set(false);
-  }
-
   private debugInputs(method: string): void {
     if (this.debug) {
-      console.debug('[FlightCardComponent - ' + method + '()]');
+      console.warn('[FlightCardComponent - ' + method + '()]');
       console.debug('flight', this.item);
       console.debug('selected', this.selected);
     }
