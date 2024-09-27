@@ -2,6 +2,7 @@ import { Component, DestroyRef, effect, inject, model } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Flight } from '../../entities/flight';
@@ -22,9 +23,14 @@ import { CITY_PATTERN } from '../../shared/global';
 export class FlightEditComponent {
   readonly flight = model.required<Flight>();
 
+  debug = true;
+  id = '';
+  showDetails = '';
+
   private readonly destroyRef = inject(DestroyRef);
   private readonly flightService = inject(FlightService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
 
   protected editForm: FormGroup = this.formBuilder.group(
     {
@@ -74,20 +80,30 @@ export class FlightEditComponent {
 
   private updated = effect(() => this.editForm.patchValue(this.flight()));
 
+  private readonly paramsSubscription = this.route.params.subscribe((params) => {
+    this.id = params['id'];
+    this.showDetails = params['showDetails'];
+  });
+
   onSave(): void {
     this.flightService
       .save(this.editForm.value)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (flight) => {
-          console.log('saved flight:', flight);
+          if (this.debug) {
+            console.log('saved flight:', flight);
+          }
 
           this.flight.set(flight);
 
           this.message = 'Success!';
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error', err);
+          if (this.debug) {
+            console.error('Error', err);
+          }
+
           this.message = 'Error!';
         },
       });

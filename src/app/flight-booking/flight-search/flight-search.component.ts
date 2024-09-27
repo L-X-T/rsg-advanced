@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 import { Flight } from '../../entities/flight';
 import { FlightService } from '../shared/services/flight.service';
@@ -28,6 +29,7 @@ import { CITY_PATTERN } from '../../shared/global';
     AsyncCityValidatorDirective,
     RoundTripValidatorDirective,
     FlightEditComponent,
+    RouterLink,
   ],
   selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
