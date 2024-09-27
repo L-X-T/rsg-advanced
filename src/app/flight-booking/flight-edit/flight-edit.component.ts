@@ -1,17 +1,18 @@
 import { Component, DestroyRef, effect, inject, input } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { Flight } from '../../entities/flight';
 import { FlightService } from '../shared/services/flight.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FlightValidationErrorsComponent } from '../flight-validation-errors/flight-validation-errors.component';
 
 @Component({
   standalone: true,
   selector: 'app-flight-edit',
   templateUrl: './flight-edit.component.html',
   styleUrls: ['./flight-edit.component.css'],
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FlightValidationErrorsComponent],
 })
 export class FlightEditComponent {
   readonly flight = input.required<Flight>();
@@ -21,10 +22,26 @@ export class FlightEditComponent {
   private readonly formBuilder = inject(FormBuilder);
 
   protected editForm: FormGroup = this.formBuilder.group({
-    id: [0],
-    from: [''],
-    to: [''],
-    date: [''],
+    id: [0, [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
+    from: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15),
+        Validators.pattern(/^[a-zA-ZäöüÄÖÜß ]+$/),
+      ],
+    ],
+    to: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(15),
+        Validators.pattern(/^[a-zA-ZäöüÄÖÜß ]+$/),
+      ],
+    ],
+    date: ['', [Validators.required, Validators.minLength(33), Validators.maxLength(33)]],
   });
 
   protected message = '';
