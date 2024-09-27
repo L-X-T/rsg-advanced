@@ -2,7 +2,7 @@ import { Component, DestroyRef, effect, inject, model } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Flight } from '../../entities/flight';
@@ -31,6 +31,7 @@ export class FlightEditComponent {
   private readonly flightService = inject(FlightService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   protected editForm: FormGroup = this.formBuilder.group(
     {
@@ -95,6 +96,8 @@ export class FlightEditComponent {
           this.flight.set(flight);
           this.message = 'Success saving!';
           this.patchFormValue();
+
+          setTimeout(() => this.router.navigate(['/flight-booking/flight-search']), 3000);
         },
         error: (err: HttpErrorResponse) => {
           if (this.debug) {
