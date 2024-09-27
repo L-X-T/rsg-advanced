@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input } from '@angular/core';
+import { Component, DestroyRef, effect, inject, model } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -19,7 +19,7 @@ import { validateRoundTrip } from '../shared/validation/round-trip-validator';
   imports: [ReactiveFormsModule, FlightValidationErrorsComponent],
 })
 export class FlightEditComponent {
-  readonly flight = input.required<Flight>();
+  readonly flight = model.required<Flight>();
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly flightService = inject(FlightService);
@@ -79,6 +79,10 @@ export class FlightEditComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (flight) => {
+          console.log('saved flight:', flight);
+
+          this.flight.set(flight);
+
           this.message = 'Success!';
         },
         error: (err: HttpErrorResponse) => {
