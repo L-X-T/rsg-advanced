@@ -9,9 +9,17 @@
       <input class="form-control" [formControl]="control" />
     </div>
 
-    @if (isLoading) {
-      <div>Loading ...</div>
-    }
+    <div>
+      @let diff = diff$ | async;
+
+      @if (isLoading) {
+        Loading ...
+      } @else if (diff) {
+        #flights diff: {{ diff > 0 ? '+' + diff : diff }}
+      } @else {
+        &nbsp;
+      }
+    </div>
 
     <table class="table table-striped">
       @for (f of flights$ | async; track f.id) {
