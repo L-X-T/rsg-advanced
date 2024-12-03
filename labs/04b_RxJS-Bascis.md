@@ -17,7 +17,7 @@
 
 ## Preparation: Airport component
 
-In this exercise, you will expand your application by one page that lists all airports. You can orientate yourself by the existing `FlightSearchComponent`. The web API with the airports can be found here: `http://www.angular.at/api/airport`.
+In this exercise, you will expand your application by one component that lists all airports. You can orientate yourself by the existing `FlightSearchComponent`. The web API with the airports can be found here: `http://www.angular.at/api/airport`.
 
 Please note that the returned data is just an array with strings. For data access you will write an `AirportService` within the component's folder.
 
@@ -143,7 +143,9 @@ You can follow these steps:
    […]
    ```
 
-6. Test your solution.
+6. Make sure the component was also imported in the `imports` array of your _app.component.ts_.
+
+7. Test your solution.
 
 ## Observable and Observer
 
