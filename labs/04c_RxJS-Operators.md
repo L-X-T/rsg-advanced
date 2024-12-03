@@ -237,10 +237,7 @@ In this example, you'll calculate the size difference of two subsequent search r
 For this, create an observable using the existing `flights$` observable:
 
 ```typescript
-this.diff$ = this.flights$
-  .pipe
-  // here we need some operators ...
-  ();
+this.diff$ = this.flights$.pipe(); // here we need some operators ...
 ```
 
 To finish this implementation, you'll need the operators `pairwise` and `map`. You can find a description for `pairwise` [here](https://rxjs-dev.firebaseapp.com/api/operators/pairwise) and [here](https://www.learnrxjs.io/operators/combination/pairwise).
@@ -254,6 +251,19 @@ this.diff$ = this.flights$.pipe(
   pairwise(),
   map(([a, b]) => b.length - a.length),
 );
+```
+
+```angular2html
+<div>
+  @let diff = diff$ | async;
+  @if (isLoading) {
+    Loading ...
+  } @else if (diff) {
+    #flights diff: {{ diff > 0 ? '+' + diff : diff }}
+  } @else {
+    &nbsp; // &nbpsc; insert a non-breaking space
+  }
+</div>
 ```
 
 </p>
