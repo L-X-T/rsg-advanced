@@ -1,6 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, distinctUntilChanged, filter, map, Observable, pairwise, switchMap, tap } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  interval,
+  map,
+  Observable,
+  pairwise,
+  share,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Flight } from '../entities/flight';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -18,13 +31,25 @@ export class FlightLookaheadComponent {
 
   private readonly http = inject(HttpClient);
 
-  protected readonly flights$ = this.control.valueChanges.pipe(
+  protected readonly input$ = this.control.valueChanges.pipe(
     filter((input) => input.length >= 3),
     debounceTime(300),
     distinctUntilChanged(),
-    tap((input) => (this.isLoading = true)),
-    switchMap((input) => this.load(input)),
-    tap((v) => (this.isLoading = false)),
+  );
+
+  protected readonly online$ = interval(2000).pipe(
+    startWith(0),
+    map((_) => Math.random() < 0.5),
+    distinctUntilChanged(),
+  );
+
+  protected readonly flights$ = combineLatest([this.input$, this.online$]).pipe(
+    filter(([i, online]) => online),
+    map(([input, o]) => input),
+    tap((i) => (this.isLoading = true)),
+    switchMap(([input, o]) => this.load(input)),
+    tap(() => (this.isLoading = false)),
+    share(),
   );
 
   protected readonly diff$ = this.flights$.pipe(
