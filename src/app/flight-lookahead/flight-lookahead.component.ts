@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, Observable, switchMap, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, Observable, switchMap, tap } from 'rxjs';
 import { Flight } from '../entities/flight';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,9 @@ export class FlightLookaheadComponent {
 
   constructor() {
     this.flights$ = this.control.valueChanges.pipe(
+      filter((input) => input.length >= 3),
       debounceTime(300),
+      distinctUntilChanged(),
       tap((input) => (this.isLoading = true)),
       switchMap((input) => this.load(input)),
       tap((v) => (this.isLoading = false)),
