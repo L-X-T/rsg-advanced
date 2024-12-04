@@ -237,6 +237,55 @@ Caution: This lab assumes you already know some basics, and thus it is a bit mor
 
 10. Test your solution. If everything works, you should see every change you make to the form in the console output.
 
+## Add your EditForm into FlightSearch \*
+
+To use your newly create `FlightEditComponent` in the `FlightSearchComponent`, you need to add it to the `FlightSearchComponent` template.
+
+1. Add  the `flightToEdit` field to your `FlightSearchComponent`:
+  
+   ```typescript
+   protected selectedFlight?: Flight;
+   protected flightToEdit: Flight | null = null;
+    ```
+
+2. Open the `flight-search.component.html` file and add the `FlightEditComponent` to the template.
+
+   <details>
+   <summary>Show source</summary>
+   <p>
+
+   ```html
+   @if (flightToEdit) {
+     <div class="card">
+       <div class="header">
+         <h2 class="title">Flight edit</h2>
+       </div>
+
+       <div class="content">
+         <app-flight-edit [flight]="flightToEdit" />
+       </div>
+     </div>
+   }
+   ```
+   
+   </p>
+   </details>
+
+3. Now you have to pass a `Flight` into `flightToEdit`. How can you implement that?
+
+   Hint: Add another button into your `FlightCard`'s content in the `@for` loop.
+
+   <details>
+   <summary>Show source</summary>
+   <p>
+
+   ```html
+   <button class="btn btn-default" (click)="flightToEdit = flight">Edit</button>
+   ```
+
+   </p>
+   </details>
+
 ## Using Angular Validators \*
 
 In this exercise you will validate the _from_ field with the built-in validators `required` and `minlength`.
