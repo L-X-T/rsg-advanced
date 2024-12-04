@@ -24,8 +24,8 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
      templateUrl: './flight-card.component.html',
    })
    export class FlightCardComponent {
-     item = input.required<Flight>();
-     selected = model(false);
+     protected readonly item = input.required<Flight>();
+     protected readonly selected = model(false);
 
      select(): void {
        this.selected.set(true);
@@ -75,12 +75,12 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
 
    ```typescript
    export class FlightSearchComponent {
-     from = '';
-     to = '';
-     flights: Flight[] = [];
-     selectedFlight?: Flight;
+     protected from = '';
+     protected to = '';
+     protected flights: Flight[] = [];
+     protected selectedFlight?: Flight;
 
-     readonly basket: { [id: number]: boolean } = { // <-- new attribute
+     protected readonly basket: { [id: number]: boolean } = { // <-- new attribute
        3: true,
        5: true
      };

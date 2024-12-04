@@ -10,7 +10,7 @@
 
 In this exercise, you will create a reactive form for editing flights.
 
-Caution: This lab assumes you already know some basics and thus is a bit more difficult and some things are left out intentionally ;-)
+Caution: This lab assumes you already know some basics, and thus it is a bit more difficult and some things are left out intentionally ;-)
 
 1. **If** you do not have a `FlightEditComponent` yet: Create a `FlightEditComponent` in the `FlightBookingModule` and call it up in the template of the `FlightSearchComponent`.
 
@@ -53,11 +53,11 @@ Caution: This lab assumes you already know some basics and thus is a bit more di
 
    @Component({ [...] })
    export class FlightEditComponent {
-     @Input({ required: true }) flight?: Flight | null;
+     protected readonly flight = input.required<Flight | null>();
 
-     editForm?: FormGroup;
+     protected readonly editForm?: FormGroup;
 
-     message = '';
+     protected message = '';
 
      [...]
    }
@@ -79,10 +79,13 @@ Caution: This lab assumes you already know some basics and thus is a bit more di
      [...]
    })
    export class FlightEditComponent {
-     [...]
+     protected readonly flight = input.required<Flight | null>();
 
      private readonly fb = inject(FormBuilder);
-
+     protected readonly editForm?: FormGroup;
+     
+     protected message = '';
+   
      [...]
    }
    ```
@@ -98,16 +101,17 @@ Caution: This lab assumes you already know some basics and thus is a bit more di
 
    ```typescript
    export class FlightEditComponent {
-     @Input({ required: true }) flight?: Flight | null;
-
-     readonly editForm = this.fb.group({
+     protected readonly flight = input.required<Flight | null>();
+   
+     private readonly fb = inject(FormBuilder);
+     protected readonly editForm = this.fb.group({
        id: [0],
        from: [''],
        to: [''],
        date: [''] // there are better ways to handle dates, but we'll keep things easy here
      });
 
-     message = '';
+     protected message = '';
 
      [...]
    }
@@ -141,7 +145,7 @@ Caution: This lab assumes you already know some basics and thus is a bit more di
    </p>
    </details>
 
-7. Make sure you update the form value when the `flight` member is changed. You can use the lifecycle method `ngOnChanges` and the `patchValue()` of the `FormGroup` object. You might also need to add the import of the `OnChanges` interface.
+7. Make sure you update the form value when the `flight` member is changed. You can use  an `effect` and the `patchValue()` of the `FormGroup` object.
 
    <details>
    <summary>Show source</summary>
@@ -151,10 +155,13 @@ Caution: This lab assumes you already know some basics and thus is a bit more di
    export class FlightEditComponent implements OnChanges {
        [...]
 
-       ngOnChanges(): void {
-         if (this.flight) {
-            this.editForm.patchValue(this.flight);
-         }
+       constructor() {
+         console.log(this.editForm.value);
+         console.log(this.editForm.valid);
+         console.log(this.editForm.touched);
+         console.log(this.editForm.dirty);
+   
+         createEffect(() => this.editForm.patchValue(this.flight()));
        }
 
        [...]
@@ -241,7 +248,7 @@ In this exercise you will validate the _from_ field with the built-in validators
    <p>
 
    ```typescript
-   readonly editForm = this.fb.group({
+   protected readonly editForm = this.fb.group({
      id: [0, Validators.required],
      from: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]],
      to: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)]],

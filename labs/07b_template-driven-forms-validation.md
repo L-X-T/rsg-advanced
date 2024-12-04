@@ -57,7 +57,7 @@ You can use the following procedure as a guide:
      [...]
    })
    export class CityValidatorDirective implements Validator {
-     validCities = ['Graz', 'Wien', 'Hamburg', 'Berlin'];
+     protected readonly validCities = ['Graz', 'Wien', 'Hamburg', 'Berlin'];
 
      validate(c: AbstractControl): ValidationErrors | null {
        if (c.value && !this.validCities.includes(c.value)) {
@@ -121,7 +121,7 @@ You can follow the following procedure:
      [...]
    })
    export class CityValidatorDirective implements Validator {
-     city = input.required<string[]>();
+     protected readonly city = input.required<string[]>();
 
      validate(c: AbstractControl): ValidationErrors | null {
        if (c.value && !this.city().includes(c.value)) {

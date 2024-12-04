@@ -223,9 +223,16 @@ This should receive an Id as a url segment and a matrix parameter showDetails wh
      selector: 'app-flight-edit',
      templateUrl: './flight-edit.component.html',
    })
-   export class FlightEditComponent implements OnChanges {
-     id?: number | null;
-     showDetails = false;
+   export class FlightEditComponent {
+     protected readonly flight = input.required<Flight | null>();
+
+     private readonly fb = inject(FormBuilder);
+     protected readonly editForm?: FormGroup;
+     
+     protected message = '';
+   
+     protected id?: number | null;
+     protected showDetails = false;
 
      private readonly route = inject(ActivatedRoute);
      private readonly paramsSubscription = this.route.params.subscribe((params) => {
@@ -351,18 +358,26 @@ In this exercise you create the opportunity to edit the flight presented in the 
      selector: 'app-flight-edit',
      templateUrl: './flight-edit.component.html'
    })
-   export class FlightEditComponent implements OnChanges {
-     id = '';
-     showDetails = false;
+   export class FlightEditComponent {
+     protected readonly flight = input.required<Flight | null>();
 
-     flight?: Flight | null;
-
-     message = '';
+     private readonly fb = inject(FormBuilder);
+     protected readonly editForm?: FormGroup;
+     
+     protected message = '';
+   
+     protected id?: number | null;
+     protected showDetails = false;
 
      private readonly route = inject(ActivatedRoute);
+     private readonly paramsSubscription = this.route.params.subscribe((params) => {
+       this.id = +params['id'];
+       this.showDetails = params['showDetails'] === 'true';
+     });
+   
      private readonly flightService = inject(FlightService);
 
-     […]
+     // […]
    }
    ```
 
@@ -380,12 +395,12 @@ In this exercise you create the opportunity to edit the flight presented in the 
      selector: 'app-flight-edit',
      templateUrl: './flight-edit.component.html'
    })
-   export class FlightEditComponent implements OnChanges {
-     […]
+   export class FlightEditComponent {
+     // […]
 
      private readonly paramsSubscription = this.route.params.subscribe((params) => this.handleRouteParams(params));
 
-     [...]
+     // […]
 
      private handleRouteParams(params: Params): void {
        this.id = +params['id'];
@@ -404,7 +419,7 @@ In this exercise you create the opportunity to edit the flight presented in the 
        });
      }
 
-     onSave(): void {
+     protected onSave(): void {
        this.flightService.save(this.editForm.value as Flight).subscribe({
          next: (flight) => {
            this.flight = flight;

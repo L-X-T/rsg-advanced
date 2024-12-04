@@ -67,7 +67,7 @@ Important note:
 
    ```typescript
    protected readonly control = new FormControl<string>('', { nonNullable: true }); // typed FormControl, since NG 14
-   readonly flights$?: Observable<Flight[]>;
+   protected readonly flights$?: Observable<Flight[]>;
    protected isLoading = false;
    ```
 
@@ -91,7 +91,7 @@ Important note:
    <p>
 
    ```typescript
-   load(from: string): Observable<Flight[]> {
+   private load(from: string): Observable<Flight[]> {
      const url = "http://www.angular.at/api/flight";
      const params = new HttpParams().set('from', from);
      const headers = new HttpHeaders().set('Accept', 'application/json');
@@ -374,10 +374,10 @@ combineLatest([a$, b$, c$]).pipe(
 Now, let's try to introduce a button reloading the current result set. For this, add an observable and a click handler for the button:
 
 ```typescript
-private refreshClickSubject = new Subject<void>();
-refreshClick$ = this.refreshClickSubject.asObservable();
+private readonly refreshClickSubject = new Subject<void>();
+protected readonly refreshClick$ = this.refreshClickSubject.asObservable();
 
-refresh(): void {
+protected refresh(): void {
   this.refreshClickSubject.next();
 }
 ```
@@ -443,8 +443,8 @@ Let's allow to add flights to a shopping basket in a reactive way. For this, add
 ```typescript
 basket$: Observable<Flight[]>;
 
-private addToBasketSubject = new Subject<Flight>();
-readonly addToBasket$ = this.addToBasketSubject.asObservable();
+private readonly addToBasketSubject = new Subject<Flight>();
+protected readonly addToBasket$ = this.addToBasketSubject.asObservable();
 ```
 
 Also, add a method `select`:

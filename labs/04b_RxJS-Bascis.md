@@ -34,7 +34,7 @@ You can follow these steps:
    Note: we don't need a `Airport` class, the airports will just use type string:
 
    ```typescript
-   airports: string[] = [];
+   protected airports: string[] = [];
    ```
 
    <details>
@@ -51,7 +51,7 @@ You can follow these steps:
      templateUrl: './airports.component.html',
    })
    export class AirportsComponent {
-     airports: string[] = [];
+     protected airports: string[] = [];
 
      private readonly airportService = inject(AirportService);
 
@@ -152,9 +152,9 @@ You can follow these steps:
 Now we want to explicitly declare the `Observable` and the `Observer`. Add two members in the airport component:
 
 ```typescript
-  airports: string[] = []; // already there
-  airports$?: Observable<string[]>;
-  airportsObserver?: Observer<string[]>;
+  protected airports: string[] = []; // already there
+  protected airports$?: Observable<string[]>;
+  protected airportsObserver?: Observer<string[]>;
 ```
 
 Make sure you've added the import of `Observable` and `Observer` from `RxJS`. In your component `constructor` assign the `Observable` you get from the service to the component member in a first step. Then create an `Observer` as a second step. You can, if you want, add a (dummy) error handling and a complete function to your `Observer`. Finally subscribe to the `Observable` with the created `Observer`.
@@ -193,8 +193,8 @@ This is probably the most primitive but also intuitive approach. All we need to 
 We'll add the subscription as a member first:
 
 ```typescript
-  airportsObserver?: Observer<string[]>; // already there
-  airportsSubscription?: Subscription;
+  protected airportsObserver?: Observer<string[]>; // already there
+  protected airportsSubscription?: Subscription;
 ```
 
 Make sure you've added the import of `Subscription` from `RxJS`. Now we just need to assign the subscription in the `constructor` and then unsubscribe in `ngOnDestroy`. Since we're using `ngOnDestroy` we also need to add it's interface `OnDestroy` to the component:
@@ -234,10 +234,10 @@ This approach is useful when you have a lot of `Subscriptions` in your component
 First let's add a `Subject` to the component members:
 
 ```typescript
-  airportsSubscription?: Subscription; // already there
+  protected airportsSubscription?: Subscription; // already there
 
-  takeUntilAirports: string[] = [];
-  onDestroySubject = new Subject<void>();
+  protected takeUntilAirports: string[] = [];
+  protected readonly onDestroySubject = new Subject<void>();
 ```
 
 Make sure you've added the import of `Subject` from `RxJS`. Now let's jump to the `ngOnDestroy` hook and create an emit for this `Subject` and close it afterwards.

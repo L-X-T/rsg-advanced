@@ -59,10 +59,10 @@ In this first part of the exercise you will implement the `FlightSearchComponent
      templateUrl: './flight-search.component.html',
    })
    export class FlightSearchComponent {
-     from = '';
-     to = '';
-     flights: Flight[] = [];
-     selectedFlight?: Flight;
+     protected from = '';
+     protected to = '';
+     protected flights: Flight[] = [];
+     protected selectedFlight?: Flight;
 
      private readonly http = inject(HttpClient);
 
@@ -315,7 +315,7 @@ Follow these steps:
    export class FlightSearchComponent {
      [...]
 
-     message = '';
+     protected message = '';
 
      [...]
    }
