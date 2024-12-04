@@ -13,33 +13,12 @@
 
 ### Implementing Lazy Loading for a feature module
 
-Implement lazy loading for the `FlightBookingModule` in your `app.routes.ts`.
+Implement lazy loading for the `flight-booking.routes.ts` in your `app.routes.ts`.
+
 Keep in mind that lazy loading only works if the module in question isn't referenced directly but only with a string in the router configuration.
 
-1. Open the file `app.module.ts` and remove the import for the `FlightBookingModule`.
-
-   <details>
-   <summary>Show Code</summary>
-   <p>
-
-   ```typescript
-   @NgModule({
-     imports: [
-       [...]
-       // FlightBookingModule,
-       // ^^ Removed b/c this would prevent lazy loading
-       [...]
-     ],
-     [...]
-   })
-   export class AppModule {}
-   ```
-
-   </p>
-   </details>
-
-2. Open the file `app.routes.ts` and introduce a route with the path `flight-booking`.
-   It should point to the `FlightBookingModule` using `loadChildren`:
+1. Open the file `app.routes.ts` and introduce a route with the path `flight-booking`.
+   It should point to the `flightBookingRoutes` using `loadChildren`:
 
    <details>
    <summary>Show Code</summary>
@@ -49,7 +28,7 @@ Keep in mind that lazy loading only works if the module in question isn't refere
    [...]
    {
      path: 'flight-booking',
-     loadChildren: () => import('./flight-booking/flight-booking.module').then(m => m.FlightBookingModule)
+     loadChildren: () => import('./flight-booking/flight-booking.routes').then(m => m.flightBookingRoutes)
    },
    {
      // This route needs to be the last one!
@@ -64,9 +43,9 @@ Keep in mind that lazy loading only works if the module in question isn't refere
 
 3. Make sure your sidebar link to flight-search and passenger-search still works (something like `routerLink="/flight-booking/flight-search"`).
 
-4. Also make sure your `Edit` Button in your `FlightCardComponent` still works (try adding two dots like `[routerLink]="['../flight-edit', ...`).
+4. Also make sure your `Edit` Button in your `FlightCardComponent` still works (`[routerLink]="['/flight-booking/flight-edit', ...`).
 
-5. Find out that webpack splits off an own chunk for the `FlightBookingModule` after implementing lazy loading.
+5. Find out that webpack splits off an own chunk for the `flightBookingRoutes` after implementing lazy loading.
    If this works, you will see another chunk at the console (e. g. `flight-booking-flight-booking-module.js` depending on the used version of the CLI)
 
 6. Try it out in the browser and use the network tab within the dev tools (F12) to make sure that it is only loaded on demand.
@@ -74,18 +53,22 @@ Keep in mind that lazy loading only works if the module in question isn't refere
 
 ### Implementing Preloading
 
-In this exercise you will implement Preloading using Angular's `PreloadAllModules` strategy.
+In this exercise you will implement Preloading using Angular `PreloadAllModules` strategy.
 
-1. Open the file `app.module.ts` and register the `PreloadAllModules` strategy when calling `RouterModule.forRoot`.
+1. Open the file `app.config.ts` and register the `PreloadAllModules` strategy when calling `provideRouter()`.
 
    <details>
    <summary>Show Code</summary>
    <p>
 
    ```typescript
-   RouterModule.forRoot(appRoutes, {
-     preloadingStrategy: PreloadAllModules,
-   });
+   provideRouter(
+      appRoutes,
+      // withDebugTracing(),
+      // withHashLocation(),
+      withPreloading(PreloadAllModules),
+      // withEnabledBlockingInitialNavigation()
+    ),
    ```
 
    </p>
@@ -93,13 +76,13 @@ In this exercise you will implement Preloading using Angular's `PreloadAllModule
 
 2. Make sure it works using the network tab within Chrome's dev tools. If it works, the lazy bundles are loaded **after** the app has been initializes. If this is the case, the chunks show up quite late in the water fall diagram.
 
-### Bonus: Implementing a Custom Preloading Strategy \*\*
+### Bonus: Using ngx-quicklink \*\*
 
-1. [Here](https://www.angulararchitects.io/aktuelles/performanceoptimierung/) you find some information about creating a custom preloading strategy. Have a look at it.
+1. [Here](https://www.npmjs.com/package/ngx-quicklink) you find some information about this fancy preloading strategy. Have a look at it.
 
-2. Create a custom preloading strategy that only preloads modules that have been marked with the `data` attribute in the router configuration.
+2. Implement to `ngx-quicklink` solution.
 
-3. Configure the system to make use of it and test it.
+3. Test it.
 
 ## Improving Data Binding Performance with OnPush
 
@@ -219,71 +202,30 @@ You find some information about the object spread operator (e. g. `...oldFlight`
 
 1. Make sure, your solution runs in debug mode (`ng serve -o`)
 
-1. Open the performance tab in Chrome's dev tools and reload the app. Find out how long bootstrapping takes and create a screenshot.
+2. Open the performance tab in Chrome's dev tools and reload the app. Find out how long bootstrapping takes and create a screenshot.
 
    **Hint:** In order to respect the cache, do it twice and take the screenshot after the 2nd try.
 
-1. Install the simple web server serve:
+3. Install the simple web server serve:
 
    ```
    npm install serve -g
    ```
 
-1. Switch to the console and move to the root folder of your project. Create a production build:
+4. Switch to the console and move to the root folder of your project. Create a production build:
 
    ```
    ng build --prod
    ```
 
-1. Start live-server for your production build. For this, switch to your project within the `dist` folder and call serve:
+5. Start live-server for your production build. For this, switch to your project within the `dist` folder and call serve:
 
    ```
    serve -s
    ```
 
-1. Open the performance tab in Chrome's dev tools and reload the app. Find out how long bootstrapping takes and create a screenshot.
+6. Open the performance tab in Chrome's dev tools and reload the app. Find out how long bootstrapping takes and create a screenshot.
 
    **Hint:** In order to respect the cache, do it twice and take the screenshot after the 2nd try.
 
-1. Compare your screenshot with the performance results.
-
-## Bonus: Inspecting Bundles with webpack-bundle-analyzer
-
-Using the webpack-bundle-analyzer one can have a look at a bundle's content. In this exercise you will use this possibility by inspecting your AOT-based and your AOT-less production build.
-
-1. Install the `webpack-bundle-analyzer` globally (for the sake of simplicity):
-
-   ```
-   npm install -g webpack
-   npm install -g webpack-bundle-analyzer
-   ```
-
-1. Move to the root folder of your project. Create a Production Build without AOT and generate a statistics file for the analyzer using the `stats-json` flag:
-
-   ```
-   ng build --aot=false --build-optimizer=false --stats-json
-   ```
-
-1. Analyze your bundles:
-
-   ```
-   cd dist/flight-app
-   webpack-bundle-analyzer stats.json
-   ```
-
-   The name of `stats.json` can be slightly different on your machine, e. g. `stats-es5.json` or `stats-es2015.json`.
-
-1. Take a screenshot to document this.
-
-1. Move to the root folder of your project. Create a production build using AOT:
-
-   ```
-   ng build --stats-json
-   ```
-
-1. Analyze these bundles too and compare it to the former bundles:
-
-   ```
-   cd dist/flight-app
-   webpack-bundle-analyzer stats.json
-   ```
+7. Compare your screenshot with the performance results.

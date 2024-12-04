@@ -21,7 +21,7 @@ In this exercise, you will implement the following menu structure with routing:
 
 The following pattern is taken into account:
 
-- The `AppComponent` and `HomeComponent` are part of the `app.routes.ts`
+- The `HomeComponent` and the `AirportComponent` should be part of the `app.routes.ts`.
 - The other two components are part of the `flight-booking.routes.ts` in the `flight-booking` folder.
 
 If you want, guide the following through the exercise:
@@ -107,7 +107,7 @@ If you want, guide the following through the exercise:
        provideRouter(
          appRoutes,
          // withDebugTracing(),
-         // withEnabledBlockingInitialNavigation()
+         // withHashLocation(),
        ),
      ],
    };
@@ -186,15 +186,27 @@ If you want, guide the following through the exercise:
 
 ## Bonus: Routes with hash fragment and tracing \*
 
-In order to influence the way the router works, the `forRoot` method accepts an object via the second optional parameter. This can be used to specify, for example, that routes are to be positioned in the hash fragment of the url (e.g. http://localhost:4200/#route instead of http://localhost:4200/route) or that the router should output tracing messages on the console:
+To influence the way the router works, the `forRoot` method accepts an object via the second optional parameter. This can be used to specify, for example, that routes are to be positioned in the hash fragment of the url (e.g. http://localhost:4200/#route instead of http://localhost:4200/route) or that the router should output tracing messages on the console:
 
 ```typescript
-RouterModule.forRoot(appRoutes, { useHash: true, enableTracing: true });
+  provideRouter(
+    appRoutes,
+    withDebugTracing(),
+    withHashLocation(),
+  ),
 ```
 
 Activate these options and make sure that the route is then placed in the hash fragment and that the router outputs information about the routing to the console.
 
-Afterward disable the hash fragment again for the upcoming exercises: `useHash: false`
+Afterward, disable the hash fragment again for the upcoming exercises:
+
+```typescript
+  provideRouter(
+    appRoutes,
+    // withDebugTracing(),
+    // withHashLocation(),
+  ),
+```
 
 ## Parameterizable Routes
 
@@ -476,7 +488,7 @@ In this exercise you create the opportunity to edit the flight presented in the 
 
 7. Test your solution. Again, note that you cannot change data records 1 to 5 and that you can create a new data record by specifying ID 0.
 
-## Bonus: Programatic Routing \*
+## Bonus: Programmatic Routing \*
 
 See the documentation for the router's navigate method under [1]. Let the router inject you into the `FlightEditComponent` and use its `navigate` method after successful saving to lead the user back to the search mask.
 
