@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, input, model, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { Flight } from '../../entities/flight';
@@ -13,9 +13,8 @@ import { Flight } from '../../entities/flight';
 export class FlightCardComponent implements OnInit, OnChanges, OnDestroy {
   debug = true;
 
-  @Input({ required: true }) item!: Flight;
-  @Input() selected = false;
-  @Output() selectedChange = new EventEmitter<boolean>();
+  item = input.required<Flight>();
+  selected = model(false);
 
   constructor() {
     this.debugInputs('constructor');
@@ -34,15 +33,11 @@ export class FlightCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onSelect(): void {
-    this.selected = true;
-    this.debugInputs('onSelect');
-    this.selectedChange.emit(true);
+    this.selected.set(true);
   }
 
   onDeselect(): void {
-    this.selected = false;
-    this.debugInputs('onDeselect');
-    this.selectedChange.emit(false);
+    this.selected.set(false);
   }
 
   private debugInputs(method: string): void {
