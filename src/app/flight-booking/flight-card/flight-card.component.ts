@@ -2,10 +2,11 @@ import { Component, input, model, OnChanges, OnDestroy, OnInit } from '@angular/
 import { DatePipe } from '@angular/common';
 
 import { Flight } from '../../entities/flight';
+import { FlightStatusToggleComponent } from '../flight-status-toggle/flight-status-toggle.component';
 
 @Component({
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, FlightStatusToggleComponent],
   selector: 'app-flight-card',
   templateUrl: './flight-card.component.html',
   styleUrls: ['./flight-card.component.css'],
