@@ -50,7 +50,9 @@ You can use the following procedure as a guide:
 
    @if (flightSearchForm.controls['from']) {
    <pre>{{ flightSearchForm.controls['from'].errors | json }}</pre>
-   } [...] @if (flightSearchForm.controls['from']?.errors['minlength']) {
+   } [...]
+   
+   @if (flightSearchForm.controls['from']?.errors['minlength']) {
    <div class="text-danger">... minlength ...</div>
    } [...]
    ```
@@ -86,9 +88,11 @@ ng g c flight-booking/flight-validation-errors
 
 ```html
 <!--classic inputs-->
-@if (errors['required']) {
+@if (errors?.['required']) {
 <div class="alert alert-danger" role="alert">This field is required.</div>
-} @if (errors['minlength']) {
+}
+
+@if (errors?.['minlength']) {
 <div class="alert alert-danger" role="alert">This field is too short.</div>
 }
 <!--[...]-->
@@ -96,9 +100,11 @@ ng g c flight-booking/flight-validation-errors
 
 ```html
 <!--signal inputs-->
-@if (errors()['required']) {
+@if (errors()?.['required']) {
 <div class="alert alert-danger" role="alert">This field is required.</div>
-} @if (errors()['minlength']) {
+}
+
+@if (errors()?.['minlength']) {
 <div class="alert alert-danger" role="alert">This field is too short.</div>
 }
 <!--[...]-->

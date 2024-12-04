@@ -332,15 +332,19 @@ After **importing** the validation directive in the `FlightSearchComponent`, it 
 
 ```html
 <form #flightSearchForm="ngForm" roundTrip>
-  [...] @if (flightSearchForm.errors['roundTrip']) {
+  [...]
+  
+  @if (flightSearchForm.errors['roundTrip']) {
   <div class="text-danger">Executing Async Validator</div>
-  } [...]
+  }
+  
+  [...]
 </form>
 ```
 
 ## Bonus: Parameterizable Multifield Validator \*\*
 
-The validator in the last example has hard-coded access to the fields `from` and `to`. Create a way to pass this information via data binding. To do this, use properties with the decorator `@Input`.
+The validator in the last example has hard-coded access to the fields `from` and `to`. Create a way to pass this information via data binding. To do this, use another input signal.
 
 ## Bonus: Asynchronous Multifield Validator \*\*\*
 
