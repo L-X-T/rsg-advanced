@@ -10,8 +10,9 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
 
 ### FlightCardComponent
 
-1. Create a new component `flight-card` in the folder `flight-booking`, which consists of a sub-folder `flight-card` with the following files:
+1. Create a new component `app-flight-card` in the folder `flight-booking`, which consists of a sub-folder `flight-card` with the following files:
 
+- `flight-card.component.css`
 - `flight-card.component.html`
 - `flight-card.component.ts`
 
@@ -23,40 +24,37 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
      templateUrl: './flight-card.component.html',
    })
    export class FlightCardComponent {
-     @Input({ required: true }) item!: Flight;
-     @Input() selected = false;
-     @Output() selectedChange = new EventEmitter<boolean>();
+     item = input.required<Flight>();
+     selected = model(false);
 
      select(): void {
-       this.selected = true;
-       this.selectedChange.emit(this.selected);
+       this.selected.set(true);
      }
 
      deselect(): void {
-       this.selected = false;
-       this.selectedChange.emit(this.selected);
+       this.selected.set(false);
      }
    }
    ```
 
-   Note that the _flight-card_ selector was set here, you could also use _app-flight-card_ of course.
+   Note that the **required input** does not need an initial value.
 
 3. Open the template of this component (`flight-card.component.html`). Expand this file so that the map is displayed:
 
    ```html
-   <div class="card" [style.background-color]="selected ? 'rgb(204, 197, 185)' : ''">
+   <div class="card" [class.selected]="selected()">
      <div class="header">
-       <h2 class="title">{{ item.from }} - {{ item.to }}</h2>
+       <h2 class="title">{{ item().from }} - {{ item().to }}</h2>
      </div>
 
      <div class="content">
-       <p>Flight-No.: #{{ item.id }}</p>
-       <p>Date: {{ item.date | date:'dd.MM.yyyy HH:mm' }}</p>
+       <p>Flight-No.: #{{ item().id }}</p>
+       <p>Date: {{ item().date | date: 'dd.MM.yyyy HH:mm' }}</p>
        <p>
-         @if (!selected) {
-         <button type="button" class="btn btn-default" (click)="select()">Select</button>
+         @if (!selected()) {
+         <button class="btn btn-default" (click)="select()">Select</button>
          } @else {
-         <button type="button" class="btn btn-default" (click)="deselect()">Deselect</button>
+         <button class="btn btn-default" (click)="deselect()">Deselect</button>
          }
        </p>
      </div>
@@ -65,7 +63,15 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
 
    Note the data binding expressions in this template. Also, make sure to import either the `DatePipe` or the `CommonModule` (which includes the `DatePipe`) into your `FlightCard` (by adding it to the component's imports array).
 
-4. Open the file _flight-search.component.ts_ and add the one property _basket_:
+4. Open the stylesheet of this component (`flight-card.component.css`). Add this `selected` styling:
+
+   ```css
+   .selected {
+     background-color: rgb(204, 197, 185);
+   }
+   ```
+
+5. Open the file _flight-search.component.ts_ and add the one property _basket_:
 
    ```typescript
    export class FlightSearchComponent {
@@ -83,9 +89,9 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
    }
    ```
 
-5. Open the file _flight-search.component.html_. Comment out the tabular output of the flights found.
+6. Open the file _flight-search.component.html_. Comment out the tabular output of the flights found.
 
-6. Instead of the table, use the new element `flight-card` to display the flights found. To do this, create an explicit binding for the properties `item`, `selected` and the event `selectedChange`.
+7. Instead of the table, use the new element `flight-card` to display the flights found. To do this, create an explicit binding for the properties `item`, `selected` and the event `selectedChange`.
 
    <details>
    <summary>Show source</summary>
@@ -104,9 +110,9 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
    </p>
    </details>
 
-7. Make sure that the new `FlightCardComponent` is imported into the `FlightSearchComponent`.
+8. Make sure that the new `FlightCardComponent` is imported into the `FlightSearchComponent`.
 
-8. At the end of the template, also update the shopping cart so that the new property `basket` is output here instead of `selectedFlight`.
+9. At the end of the template, also update the shopping cart so that the new property `basket` is output here instead of `selectedFlight`.
 
    <details>
    <summary>Show source</summary>
@@ -123,9 +129,9 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
    </p>
    </details>
 
-9. Test your solution.
+10. Test your solution.
 
-10. When calling the `FlightCardComponent`, use a two-way binding using the "Banana-in-a-Box syntax" instead of the bindings for _selected_ and _selectedChanged_.
+11. When calling the `FlightCardComponent`, use a two-way binding using the "Banana-in-a-Box syntax" instead of the bindings for _selected_ and _selectedChanged_.
 
     <details>
     <summary>Show source</summary>
@@ -144,7 +150,7 @@ In this exercise, you will first create the FlightCardComponent shown. Then you 
     </p>
     </details>
 
-11. Test your solution.
+12. Test your solution.
 
 ### Bonus: FlightStatusToggleComponent \*
 
