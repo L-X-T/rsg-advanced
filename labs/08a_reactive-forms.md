@@ -362,6 +362,8 @@ findById(id: string): Observable<Flight> {
 </p>
 </details>
 
+Caution: To be able to set the flight `input` signal you need to use a `model` instead.
+
 <details>
 <summary>Show source for FlightEditComponent</summary>
 <p>
@@ -369,8 +371,7 @@ findById(id: string): Observable<Flight> {
 ```typescript
 this.flightService.findById(this.id).subscribe({
   next: (flight) => {
-    this.flight = flight;
-    this.editForm.patchValue(this.flight);
+    this.flight.set(flight);
     this.message = 'Success loading!';
   },
   error: (err: HttpErrorResponse) => {
