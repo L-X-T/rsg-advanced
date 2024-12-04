@@ -263,7 +263,7 @@ In this exercise you will write a multifield validator that ensures that a diffe
    export class FlightEditComponent {
      [...]
 
-     readonly editForm = this.fb.group(
+     protected readonly editForm = this.fb.group(
        {
          id: [0, Validators.required],
          from: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(15)], validateAsyncCity(this.flightService)],

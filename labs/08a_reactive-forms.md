@@ -56,7 +56,7 @@ Caution: This lab assumes you already know some basics, and thus it is a bit mor
 
    @Component({ [...] })
    export class FlightEditComponent {
-     protected readonly flight = input.required<Flight | null>();
+     readonly flight = input.required<Flight>();
 
      protected readonly editForm?: FormGroup;
 
@@ -82,7 +82,7 @@ Caution: This lab assumes you already know some basics, and thus it is a bit mor
      [...]
    })
    export class FlightEditComponent {
-     protected readonly flight = input.required<Flight | null>();
+     readonly flight = input.required<Flight>();
 
      private readonly fb = inject(FormBuilder);
      protected readonly editForm?: FormGroup;
@@ -104,7 +104,7 @@ Caution: This lab assumes you already know some basics, and thus it is a bit mor
 
    ```typescript
    export class FlightEditComponent {
-     protected readonly flight = input.required<Flight | null>();
+     readonly flight = input.required<Flight>();
    
      private readonly fb = inject(FormBuilder);
      protected readonly editForm = this.fb.group({
@@ -164,7 +164,7 @@ Caution: This lab assumes you already know some basics, and thus it is a bit mor
          console.log(this.editForm.touched);
          console.log(this.editForm.dirty);
    
-         createEffect(() => this.editForm.patchValue(this.flight()));
+         effect(() => this.editForm.patchValue(this.flight()));
        }
 
        [...]
@@ -248,7 +248,7 @@ To use your newly create `FlightEditComponent` in the `FlightSearchComponent`, y
   
    ```typescript
    protected selectedFlight?: Flight;
-   protected flightToEdit: Flight | null = null;
+   protected flightToEdit?: Flight;
     ```
 
 2. Open the `flight-search.component.html` file and add the `FlightEditComponent` to the template.

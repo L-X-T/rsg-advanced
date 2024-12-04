@@ -194,9 +194,9 @@ RouterModule.forRoot(appRoutes, { useHash: true, enableTracing: true });
 
 Activate these options and make sure that the route is then placed in the hash fragment and that the router outputs information about the routing to the console.
 
-Afterwards disable the hash fragment again for the upcoming exercises: `useHash: false`
+Afterward disable the hash fragment again for the upcoming exercises: `useHash: false`
 
-## Parametrizable Routes
+## Parameterizable Routes
 
 In this exercise you will create a new component `FlightEditComponent` in the `FlightBookingModule`:
 
@@ -224,7 +224,7 @@ This should receive an Id as a url segment and a matrix parameter showDetails wh
      templateUrl: './flight-edit.component.html',
    })
    export class FlightEditComponent {
-     protected readonly flight = input.required<Flight | null>();
+     readonly flight = input.required<Flight>();
 
      private readonly fb = inject(FormBuilder);
      protected readonly editForm?: FormGroup;
@@ -359,7 +359,7 @@ In this exercise you create the opportunity to edit the flight presented in the 
      templateUrl: './flight-edit.component.html'
    })
    export class FlightEditComponent {
-     protected readonly flight = input.required<Flight | null>();
+     readonly flight = input.required<Flight>();
 
      private readonly fb = inject(FormBuilder);
      protected readonly editForm?: FormGroup;
@@ -474,7 +474,7 @@ In this exercise you create the opportunity to edit the flight presented in the 
 
 6. Check with the TypeScript compiler in your IDE whether there are any compilation errors and correct them if necessary.
 
-7. Test your solution. Again note that you cannot change data records 1 to 5 and that you can create a new data record by specifying ID 0.
+7. Test your solution. Again, note that you cannot change data records 1 to 5 and that you can create a new data record by specifying ID 0.
 
 ## Bonus: Programatic Routing \*
 
