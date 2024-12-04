@@ -1,10 +1,13 @@
 # Reactive Forms
 
-- [Reactive Forms](#reactive-forms)
-  - [Edit flights \*](#edit-flights-)
-  - [Using Angular Validators \*](#using-angular-validators-)
-  - [Bonus: Load flight \*](#bonus-load-flight-)
-  - [Bonus: Save flight \*](#bonus-save-flight-)
+<!-- TOC -->
+* [Reactive Forms](#reactive-forms)
+  * [Edit flights \*](#edit-flights-)
+  * [Add it into FlightSearch \*](#add-it-into-flightsearch-)
+  * [Using Angular Validators \*](#using-angular-validators-)
+  * [Bonus: Load flight \*](#bonus-load-flight-)
+  * [Bonus: Save flight \*](#bonus-save-flight-)
+<!-- TOC -->
 
 ## Edit flights \*
 
@@ -237,7 +240,7 @@ Caution: This lab assumes you already know some basics, and thus it is a bit mor
 
 10. Test your solution. If everything works, you should see every change you make to the form in the console output.
 
-## Add your EditForm into FlightSearch \*
+## Add it into FlightSearch \*
 
 To use your newly create `FlightEditComponent` in the `FlightSearchComponent`, you need to add it to the `FlightSearchComponent` template.
 
