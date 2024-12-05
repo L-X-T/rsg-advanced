@@ -71,7 +71,7 @@ export class FlightSearchComponent implements OnDestroy {
     effect(() => console.log(this.flightsLength() + ' flight(s) found.')); // similar to RxJS tap()
 
     if (this.from && this.to) {
-      this.onSearch();
+      // this.onSearch();
     }
   }
 

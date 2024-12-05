@@ -107,18 +107,26 @@
   <div class="row">
     @for (flight of flights; track flight.id) {
       <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
-        <app-flight-card [item]="flight" [selected]="basket[flight.id]">
-          <button class="btn btn-default" style="margin-right: 10px" (click)="basket[flight.id] = !basket[flight.id]">
-            {{ basket[flight.id] ? 'Deselect' : 'Select' }}
-          </button>
+        @defer (on timer(4200); prefetch on idle) {
+          <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
+          <app-flight-card [item]="flight" [selected]="basket[flight.id]">
+            <button class="btn btn-default" style="margin-right: 10px" (click)="basket[flight.id] = !basket[flight.id]">
+              {{ basket[flight.id] ? 'Deselect' : 'Select' }}
+            </button>
 
-          <app-flight-status-toggle style="margin-right: 10px" [(delayed)]="flight.delayed" />
+            <app-flight-status-toggle style="margin-right: 10px" [(delayed)]="flight.delayed" />
 
-          <a class="btn btn-default" [routerLink]="['/flight-booking/flight-edit', flight.id, { showDetails: true }]">
-            Edit
-          </a>
-        </app-flight-card>
+            <a class="btn btn-default" [routerLink]="['/flight-booking/flight-edit', flight.id, { showDetails: true }]">
+              Edit
+            </a>
+          </app-flight-card>
+        } @placeholder {
+          <div>Flight details placeholder!</div>
+        } @loading {
+          <div>Loading flight details...</div>
+        } @error {
+          <div>Loading flight details failed.</div>
+        }
       </div>
     }
   </div>
