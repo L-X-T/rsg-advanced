@@ -30,22 +30,26 @@ ng e2e
 ng add @cypress/schematic
 ```
 
-## Create a sanity check
+## Setup Cypress and run a sanity check
 
 1. Create or switch the directory `/cypress/e2e` and create a new test file `app.cy.ts`.
 
    **Note**: If you're using a **Nx workspace** this file is found in the folder `apps/flight-app-e2e/src/integration`. You can remove the existing test because it will probably fail.
 
-2. Open the file `app.cy.ts` and add a sanity test.
+2. Rename the file `spec.cy.ts` to `app.cy.ts` and look at its sanity test.
 
    <details>
    <summary>Show Code</summary>
    <p>
 
    ```typescript
-   describe('flight-app', () => {
-     it('should do a sanity check', () => {
-       cy.visit('');
+   describe('flight app', () => {
+     beforeEach(() => {
+       cy.visit('/');
+     });
+
+     it('visits the initial page and check th title', () => {
+       cy.contains('Hello World!');
      });
 
      // next test goes here
@@ -55,24 +59,47 @@ ng add @cypress/schematic
    </p>
    </details>
 
-3. Now fire up your application with `npm start` or just `ng s` and test your e2e-testing by running `cypress run`.
+3. Now fire up your application and Cypress with `ng e2e`.
 
    **Note**: If you're using a **Nx workspace** you can just run `nx e2e flight-app-e2e`.
 
-If everything is set up correctly you should get 1 passing test. If the test passes good, else please contact your trainer before you continue. Note that you could also run `cypress open` (or `nx e2e flight-app-e2e --watch` for Nx workspace) to load the Cypress testing GUI.
+If everything is set up correctly, you should get 1 passing test. If the test passes good, else please contact your trainer before you continue.
 
-### Bonus: Create a performance test \*
+Note, that you could also run `cypress run` (or `nx e2e flight-app-e2e` for Nx workspace) to run Cypress in `headless` mode.
+
+Note, that you could also run `cypress open` (or `nx e2e flight-app-e2e --watch` for Nx workspace) to open the Cypress GUI.
+
+For Cypress adjustments, you can also have a look at the `cypress.config.ts` and of course your `angular.json` in the root directory. In the latter, you can define your favorite browser (`electron` in my case):
+
+```json
+{
+  "builder": "@cypress/schematic:cypress",
+  "options": {
+    "devServerTarget": "essentials:serve",
+    "watch": true,
+    "headless": false,
+    "browser": "electron"
+  },
+  "configurations": {
+    "production": {
+      "devServerTarget": "essentials:serve:production"
+    }
+  }
+}
+```
+
+### Create a performance test \*
 
 We can create a simple performance test that checks if our app loads in less than a second.
 
-1. Since you're probably not familiar with the Cypress syntax you can just copy the following test into your `misc.cy.ts`:
+1. Since you're probably not familiar with the Cypress syntax, you can just copy the following test into your `misc.cy.ts`:
 
    <details>
    <summary>Show Code</summary>
    <p>
 
    ```typescript
-   it('should load page below 1 second', () => {
+   it('should load inital page below 1 second', () => {
      cy.visit('/', {
        onBeforeLoad: (win) => {
          win.performance.mark('start-loading');
@@ -81,12 +108,14 @@ We can create a simple performance test that checks if our app loads in less tha
          win.performance.mark('end-loading');
        }
      })
-       .its('performance')
-       .then((p) => {
-         p.measure('pageLoad', 'start-loading', 'end-loading');
-         const measure = p.getEntriesByName('pageLoad')[0];
-         expect(measure.duration).to.be.most(1000);
-       });
+      .its('performance')
+      .then((perf) => {
+        perf.measure('pageLoad', 'start-loading', 'end-loading');
+        const measure = perf.getEntriesByName('pageLoad')[0];
+        const duration = Math.round(measure.duration);
+        cy.log(`Page load duration: ${duration}`);
+        expect(duration).to.be.most(1000);
+      });
    });
    ```
 
@@ -155,9 +184,9 @@ You might have to modify the assertion of the `app-flight-card` count.
 <p>
 
 ```typescript
-describe('Flight Search E2E Test', () => {
+describe('flight booking feature', () => {
   beforeEach(() => {
-    cy.visit('');
+    cy.visit('/flight-booking/flight-search');
   });
 
   it('should verify that flight search is showing cards', () => {
@@ -168,8 +197,8 @@ describe('Flight Search E2E Test', () => {
       expect($button).to.not.have.attr('disabled', 'disabled');
     });
 
-    cy.get('form .btn').click();
-    cy.get('flight-card').its('length').should('be.gte', 3);
+    cy.get('form .btn').first().click();
+    cy.get('app-flight-card').its('length').should('be.gte', 3);
   });
 });
 ```
