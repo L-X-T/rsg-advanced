@@ -22,5 +22,12 @@ describe('flight booking feature', () => {
     cy.get('input[name=to]').clear().type('Eisenstadt');
     cy.get('form .btn').first().click();
     cy.get('app-flight-card').should('have.length', 3);
+
+    cy.get('app-flight-card').first().as('flight-card');
+    cy.get('@flight-card').find('> div').should('have.css', 'background-color', 'rgb(255, 255, 255)');
+    cy.get('@flight-card').contains('button', 'Select').click();
+    cy.get('@flight-card').find('> div').should('have.css', 'background-color', 'rgb(204, 197, 185)');
+    cy.get('@flight-card').contains('button', 'Select').should('not.exist');
+    cy.get('@flight-card').contains('button', 'Deselect').should('exist');
   });
 });
