@@ -18,10 +18,16 @@
 
 ## Preparation
 
-1. First of all, you need to make sure that Cypress is installed as a dev dependency. If not, this can be done automatically by running:
+1. First of all, you need to make sure that Cypress is already set up in your project. Try running:
 
-```bash
-npx ng add @cypress/schematic
+```shell
+ng e2e
+```
+
+2. If not, you can add Cypress to your project by running this schematic:
+
+```shell
+ng add @cypress/schematic
 ```
 
 ## Create a sanity check
