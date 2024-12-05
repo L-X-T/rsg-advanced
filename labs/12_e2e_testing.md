@@ -191,8 +191,8 @@ describe('flight booking feature', () => {
 
   it('should verify that flight search is showing cards', () => {
     cy.contains('a', 'Flights').click();
-    cy.get('input[name=from]').clear().type('Graz');
-    cy.get('input[name=to]').clear().type('Hamburg');
+    cy.get('input[name=from]').clear().type('Hamburg');
+    cy.get('input[name=to]').clear().type('Graz');
     cy.get('form .btn').should(($button) => {
       expect($button).to.not.have.attr('disabled', 'disabled');
     });
@@ -248,8 +248,8 @@ it('should search for flights from Wien to Eisenstadt by intercepting the networ
   cy.contains('a', 'Flights').click();
   cy.get('input[name=from]').clear().type('Wien');
   cy.get('input[name=to]').clear().type('Eisenstadt');
-  cy.get('form .btn').click();
-  cy.get('flight-card').should('have.length', 3);
+  cy.get('form .btn').first().click();
+  cy.get('app-flight-card').should('have.length', 3);
 });
 ```
 
@@ -268,58 +268,15 @@ The provided solution also showcases the usage of alias and checks for non-exist
 
 ```typescript
 it('should search for flights from Wien to Eisenstadt by intercepting the network', () => {
-  cy.fixture('flights').then((flights) => cy.intercept('GET', 'http://www.angular.at/api/flight**', flights));
-  cy.contains('a', 'Flights').click();
-  cy.get('input[name=from]').clear().type('Wien');
-  cy.get('input[name=to]').clear().type('Eisenstadt');
-  cy.get('form .btn').click();
+  // [...]
+  cy.get('app-flight-card').should('have.length', 3);
 
-  cy.get('flight-card').first().as('flight-card');
+  cy.get('app-flight-card').first().as('flight-card');
   cy.get('@flight-card').find('> div').should('have.css', 'background-color', 'rgb(255, 255, 255)');
   cy.get('@flight-card').contains('button', 'Select').click();
   cy.get('@flight-card').find('> div').should('have.css', 'background-color', 'rgb(204, 197, 185)');
   cy.get('@flight-card').contains('button', 'Select').should('not.exist');
-  cy.get('@flight-card').contains('button', 'Remove').should('exist');
-});
-```
-
-</p>
-</details>
-
-### Test Disabled Search Button
-
-Implement a Test that checks whether the Search Button is correctly deactivated if the property `from` is not set.
-
-<details>
-<summary>Show Solution</summary>
-<p>
-
-```typescript
-it('should disable the search button when form is invalid', () => {
-  cy.contains('a', 'Flights').click();
-  cy.get('input[name=from]').clear();
-  cy.get('input[name=to]').clear();
-  cy.get('form .btn').should('be.disabled');
-});
-```
-
-</p>
-</details>
-
-### Test Enabled Search Button
-
-Implement a Test that checks whether the Search Button is correctly activated if the properties `from` and `to` are set.
-
-<details>
-<summary>Show Solution</summary>
-<p>
-
-```typescript
-it('should enable the search button when form is valid', () => {
-  cy.contains('a', 'Flights').click();
-  cy.get('input[name=from]').clear().type('Wien');
-  cy.get('input[name=to]').clear().type('Frankfurt');
-  cy.get('form .btn').should('not.be.disabled');
+  cy.get('@flight-card').contains('button', 'Deselect').should('exist');
 });
 ```
 
