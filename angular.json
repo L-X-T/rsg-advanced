@@ -96,7 +96,8 @@
           "options": {
             "devServerTarget": "essentials:serve",
             "watch": true,
-            "headless": false
+            "headless": false,
+            "browser": "electron"
           },
           "configurations": {
             "production": {
