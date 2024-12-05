@@ -1,8 +1,8 @@
-import { Component, DestroyRef, effect, inject, model } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, model } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { Flight } from '../../entities/flight';
@@ -23,9 +23,10 @@ import { CITY_PATTERN } from '../../shared/global';
 export class FlightEditComponent {
   readonly flight = model.required<Flight>();
 
+  readonly id = input<string>('0');
+  readonly showDetails = input<string>('');
+
   debug = true;
-  id = '';
-  showDetails = '';
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly flightService = inject(FlightService);
@@ -80,8 +81,7 @@ export class FlightEditComponent {
     });
 
   private updated = effect(() => this.editForm.patchValue(this.flight()));
-
-  private readonly paramsSubscription = this.route.params.subscribe((params) => this.onRouteParams(params));
+  private idChanged = effect(() => this.onIdChange(this.id()));
 
   onSave(): void {
     this.flightService
@@ -115,12 +115,12 @@ export class FlightEditComponent {
     }
   }
 
-  private onRouteParams(params: Params) {
-    this.id = params['id'];
-    this.showDetails = params['showDetails'];
+  private onIdChange(id: string): void {
+    // this.id.set(params['id']);
+    // this.showDetails = params['showDetails'];
 
     this.flightService
-      .findById(this.id)
+      .findById(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (flight) => {
