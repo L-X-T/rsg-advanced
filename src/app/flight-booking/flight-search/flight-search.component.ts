@@ -8,7 +8,7 @@ import {
   inject,
   OnDestroy,
   signal,
-  ViewChild,
+  viewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -27,7 +27,6 @@ import { AsyncCityValidatorDirective } from '../shared/validation/async-city-val
 import { RoundTripValidatorDirective } from '../shared/validation/round-trip-validator.directive';
 import { FlightEditComponent } from '../flight-edit/flight-edit.component';
 import { CITY_PATTERN } from '../../shared/global';
-import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   standalone: true,
@@ -41,9 +40,6 @@ import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } 
     RoundTripValidatorDirective,
     FlightEditComponent,
     RouterLink,
-    CdkVirtualScrollViewport,
-    CdkVirtualForOf,
-    CdkFixedSizeVirtualScroll,
   ],
   selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
@@ -52,7 +48,7 @@ import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlightSearchComponent implements OnDestroy {
-  @ViewChild('flightSearchForm') flightSearchForm?: NgForm;
+  flightSearchForm = viewChild(NgForm);
 
   protected from = 'Hamburg';
   protected to = 'Graz';
@@ -105,8 +101,8 @@ export class FlightSearchComponent implements OnDestroy {
   }
 
   protected onSearch(): void {
-    if (this.flightSearchForm?.invalid) {
-      this.flightSearchForm.form.markAllAsTouched();
+    if (this.flightSearchForm()?.invalid) {
+      this.flightSearchForm()?.form.markAllAsTouched();
       return;
     }
     // 1. my observable
