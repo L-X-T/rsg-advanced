@@ -1,4 +1,16 @@
-import { Component, computed, DestroyRef, effect, inject, OnDestroy, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  OnDestroy,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -7,7 +19,6 @@ import { RouterLink } from '@angular/router';
 
 import { Flight } from '../../entities/flight';
 import { FlightService } from '../shared/services/flight.service';
-import { CityPipe } from '../../shared/pipes/city.pipe';
 import { BehaviorSubject, Observable, Observer, share, Subject, Subscription, takeUntil } from 'rxjs';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 import { FlightStatusToggleComponent } from '../flight-status-toggle/flight-status-toggle.component';
@@ -16,13 +27,13 @@ import { AsyncCityValidatorDirective } from '../shared/validation/async-city-val
 import { RoundTripValidatorDirective } from '../shared/validation/round-trip-validator.directive';
 import { FlightEditComponent } from '../flight-edit/flight-edit.component';
 import { CITY_PATTERN } from '../../shared/global';
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    CityPipe,
     FlightCardComponent,
     FlightStatusToggleComponent,
     FlightValidationErrorsComponent,
@@ -30,10 +41,15 @@ import { CITY_PATTERN } from '../../shared/global';
     RoundTripValidatorDirective,
     FlightEditComponent,
     RouterLink,
+    CdkVirtualScrollViewport,
+    CdkVirtualForOf,
+    CdkFixedSizeVirtualScroll,
   ],
   selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
   styleUrl: './flight-search.component.css',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlightSearchComponent implements OnDestroy {
   @ViewChild('flightSearchForm') flightSearchForm?: NgForm;
@@ -66,6 +82,7 @@ export class FlightSearchComponent implements OnDestroy {
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly flightService = inject(FlightService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   constructor() {
     effect(() => console.log(this.flightsLength() + ' flight(s) found.')); // similar to RxJS tap()
@@ -102,6 +119,7 @@ export class FlightSearchComponent implements OnDestroy {
         this.flightsSubject.next(flights);
         this.flightsSignal.set(flights);
         this.flightsSignal.update((flights) => [...flights]);
+        this.cdr.markForCheck();
       },
       error: (errResp: HttpErrorResponse) => console.error('Error loading flights', errResp),
       complete: () => {

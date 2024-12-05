@@ -1,7 +1,18 @@
-.active td {
-  background-color: orange !important;
-}
+app-flight-search {
+  .active td {
+    background-color: orange !important;
+  }
 
-input.ng-invalid.ng-touched {
-  border: 1px solid #bf032a;
+  input.ng-invalid.ng-touched {
+    border: 1px solid #bf032a;
+  }
+
+  cdk-virtual-scroll-viewport {
+    height: 580px;
+    padding: 16px;
+  }
+
+  .cdk-virtual-scroll-content-wrapper {
+    padding: 16px;
+  }
 }

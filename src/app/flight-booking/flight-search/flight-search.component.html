@@ -109,34 +109,101 @@
 
 @if (flights.length > 0) {
   <div class="row">
-    @for (flight of flights; track flight.id; let index = $index) {
-      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-        @defer (on viewport; prefetch on idle) {
-          <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
-          <app-flight-card [item]="flight" [selected]="basket[flight.id]">
-            <button class="btn btn-default" style="margin-right: 10px" (click)="basket[flight.id] = !basket[flight.id]">
-              {{ basket[flight.id] ? 'Deselect' : 'Select' }}
-            </button>
+    <cdk-virtual-scroll-viewport itemSize="274" class="viewport">
+      <div *cdkVirtualFor="let flight of flights; let index = index" [id]="'row_' + index" class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          @defer (on viewport; prefetch on idle) {
+            <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
+            <app-flight-card [item]="flight" [selected]="basket[flight.id]">
+              <button
+                class="btn btn-default"
+                style="margin-right: 10px"
+                (click)="basket[flight.id] = !basket[flight.id]"
+              >
+                {{ basket[flight.id] ? 'Deselect' : 'Select' }}
+              </button>
 
-            <app-flight-status-toggle
-            style="margin-right: 10px"
-            [(delayed)]="flight.delayed"
-            (delayedChange)="updateFlightDelayedStatus(index, $event)"
-          />
+              <app-flight-status-toggle
+                style="margin-right: 10px"
+                [(delayed)]="flight.delayed"
+                (delayedChange)="updateFlightDelayedStatus(index, $event)"
+              />
 
-            <a class="btn btn-default" [routerLink]="['/flight-booking/flight-edit', flight.id, { showDetails: true }]">
-              Edit
-            </a>
-          </app-flight-card>
-        } @placeholder {
-          <div>Flight details placeholder!</div>
-        } @loading {
-          <div>Loading flight details...</div>
-        } @error {
-          <div>Loading flight details failed.</div>
-        }
+              <a
+                class="btn btn-default"
+                [routerLink]="['/flight-booking/flight-edit', flight.id, { showDetails: true }]"
+              >
+                Edit
+              </a>
+            </app-flight-card>
+          } @placeholder {
+            <div>Flight details placeholder!</div>
+          } @loading {
+            <div>Loading flight details...</div>
+          } @error {
+            <div>Loading flight details failed.</div>
+          }
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          @defer (on viewport; prefetch on idle) {
+            <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
+            <app-flight-card [item]="flight" [selected]="basket[flight.id]">
+              <button
+                class="btn btn-default"
+                style="margin-right: 10px"
+                (click)="basket[flight.id] = !basket[flight.id]"
+              >
+                {{ basket[flight.id] ? 'Deselect' : 'Select' }}
+              </button>
+
+              <app-flight-status-toggle style="margin-right: 10px" [(delayed)]="flight.delayed" />
+
+              <a
+                class="btn btn-default"
+                [routerLink]="['/flight-booking/flight-edit', flight.id, { showDetails: true }]"
+              >
+                Edit
+              </a>
+            </app-flight-card>
+          } @placeholder {
+            <div>Flight details placeholder!</div>
+          } @loading {
+            <div>Loading flight details...</div>
+          } @error {
+            <div>Loading flight details failed.</div>
+          }
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          @defer (on viewport; prefetch on idle) {
+            <!--<app-flight-card [item]="flight" [selected]="basket[flight.id]" (selectedChange)="basket[flight.id] = $event" />-->
+            <app-flight-card [item]="flight" [selected]="basket[flight.id]">
+              <button
+                class="btn btn-default"
+                style="margin-right: 10px"
+                (click)="basket[flight.id] = !basket[flight.id]"
+              >
+                {{ basket[flight.id] ? 'Deselect' : 'Select' }}
+              </button>
+
+              <app-flight-status-toggle style="margin-right: 10px" [(delayed)]="flight.delayed" />
+
+              <a
+                class="btn btn-default"
+                [routerLink]="['/flight-booking/flight-edit', flight.id, { showDetails: true }]"
+              >
+                Edit
+              </a>
+            </app-flight-card>
+          } @placeholder {
+            <div>Flight details placeholder!</div>
+          } @loading {
+            <div>Loading flight details...</div>
+          } @error {
+            <div>Loading flight details failed.</div>
+          }
+        </div>
       </div>
-    }
+    </cdk-virtual-scroll-viewport>
   </div>
 }
 
@@ -146,7 +213,7 @@
   </div>
 </div>
 
-@if (flights$ | async; as asyncFlights) {
+<!--@if (flights$ | async; as asyncFlights) {
   @if (asyncFlights.length > 0) {
     <div class="card">
       <div class="header">
@@ -181,10 +248,10 @@
       </div>
     </div>
   }
-}
+}-->
 
 <!-- duplicated this part again to demonstrate signals -->
-@if (flightsLength() > 0) {
+<!--@if (flightsLength() > 0) {
   <div class="card">
     <div class="header">
       <h2 class="title">Signal flight(s)</h2>
@@ -217,7 +284,7 @@
       </table>
     </div>
   </div>
-}
+}-->
 
 <!--@if (selectedFlight) {
   <div class="card">
